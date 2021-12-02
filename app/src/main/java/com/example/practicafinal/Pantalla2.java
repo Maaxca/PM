@@ -28,14 +28,16 @@ Button buttonPreguntas,buttonAprender,buttonConfiguracion;
         buttonAprender.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent=new Intent(Pantalla2.this,PantallaAprender.class);
+                startActivityForResult(intent,2);
             }
         });
 
         buttonConfiguracion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent=new Intent(Pantalla2.this,PantallaConfiguracion.class);
+                startActivityForResult(intent,3);
             }
         });
     }
