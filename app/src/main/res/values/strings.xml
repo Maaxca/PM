@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">HagoTestYMeMuevoUnMonton</string>
+    <string name="Clave">Clave de acceso</string>
+    <string name="HacerFoto">Hacer Foto</string>
+    <string name="Galeria">Seleccionar Galeria</string>
+    <string name="Entrar">Entrar</string>
+    <string name="Preparar">Preparar Preguntas</string>
+    <string name="Aprender">Aprender</string>
+    <string name="Configuracion">Configuracion</string>
+    <string name="Correcta">RESPUESTA CORRECTA</string>
+    <string name="Pregunta">PREGUNTA</string>
+    <string name="Incorrecta">RESPUESTA INCORRECTA</string>
+    <string name="Mostrar">Mostrar Preguntas</string>
+    <string name="Añadir">Añadir</string>
+    <string name="Modificar">Modificar</string>
+    <string name="Borrar">Borrar</string>
+</resources>
