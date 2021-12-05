@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HagoTestYMeMuevoUnMonton</string>
+    <string name="Clave">Password</string>
+    <string name="HacerFoto">Take a Photo</string>
+    <string name="Galeria">Choose from Gallery</string>
+    <string name="Entrar">Enter</string>
+    <string name="Preparar">Prepare Questions</string>
+    <string name="Aprender">Learn</string>
+    <string name="Configuracion">Configuration</string>
+    <string name="Correcta">CORRECT ANSWER</string>
+    <string name="Pregunta">QUESTION</string>
+    <string name="Incorrecta">INCORRECT ANSWER</string>
+    <string name="Mostrar">Show Question</string>
+    <string name="Añadir">Add</string>
+    <string name="Modificar">Modify</string>
+    <string name="Borrar">Delete</string>
+    <string name="Siguiente">Next</string>
+    <string name="Sonido">Sounds</string>
+</resources>
