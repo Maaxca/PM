@@ -8,6 +8,7 @@ import android.widget.Switch;
 
 public class PantallaConfiguracion extends AppCompatActivity {
     Switch switch1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
