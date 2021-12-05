@@ -16,4 +16,8 @@
     <string name="Borrar">Borrar</string>
     <string name="Siguiente">Siguiente</string>
     <string name="Sonido">Sonidos</string>
+    <string name="Ver">Ver Logros</string>
+    <string name="Metros">Metros Recorridos</string>
+    <string name="Logros">Logros</string>
+    <string name="BorrarL">Borrar Logros</string>
 </resources>

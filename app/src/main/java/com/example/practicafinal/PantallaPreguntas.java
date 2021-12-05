@@ -105,6 +105,24 @@ public class PantallaPreguntas extends AppCompatActivity {
                 Toast.makeText(PantallaPreguntas.this,borrado?"Borrado hecho correctamente":"No se ha borrado",Toast.LENGTH_SHORT).show();
             }
         });
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cursor cursor=manejadordeBasedeDatos.listar2(Integer.toString(position+1));
+                if(cursor!=null&&cursor.getCount()>0){
+                    while(cursor.moveToNext()){
+                        txtID.setText(cursor.getString(0));
+                        txtPregunta.setText(cursor.getString(1));
+                        txtCorrecta.setText(cursor.getString(2));
+                        txtIncorrecta1.setText(cursor.getString(3));
+                        txtIncorrecta2.setText(cursor.getString(4));
+                    }
+                }
+                else{
+                    Toast.makeText(PantallaPreguntas.this, "Error", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override

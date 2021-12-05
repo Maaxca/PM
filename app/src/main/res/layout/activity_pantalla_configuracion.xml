@@ -21,16 +21,43 @@
 
     <Switch
         android:id="@+id/switch1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="87dp"
+        android:layout_height="31dp"
         android:text="ON"
         android:textOff="OFF"
         android:textOn="ON"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.608"
+        app:layout_constraintHorizontal_bias="0.669"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.102"
+        app:layout_constraintVertical_bias="0.1"
         tools:checked="true" />
+
+    <Button
+        android:id="@+id/btnLogros"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#5C5B5B"
+        android:text="@string/Ver"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.243" />
+
+    <Button
+        android:id="@+id/btnBorrarLogros"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#F10B0B"
+        android:text="@string/BorrarL"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.437" />
 </androidx.constraintlayout.widget.ConstraintLayout>

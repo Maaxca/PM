@@ -17,4 +17,8 @@
     <string name="Borrar">Delete</string>
     <string name="Siguiente">Next</string>
     <string name="Sonido">Sounds</string>
+    <string name="Ver">See Achievements</string>
+    <string name="Metros">Meters</string>
+    <string name="Logros">Achievements</string>
+    <string name="BorrarL">Delete Achievements</string>
 </resources>

@@ -24,8 +24,11 @@ public class ManejadordeBasedeDatos extends SQLiteOpenHelper {
     private static final String COLUMN_RESPUESTA_INCORRECTA2="INCORRECTO2";
     private static final String COLUMN_HORA_FECHA="HORA_FECHA";
     private static final String COLUMN_PUNTUACION="PUNTUACION";
+    private static final String COLUMN_BATERIA="BATERIA";
+    private static final String COLUMN_GPS="GPS";
     private static final String TABLE_NAME="PREGUNTAS";
     private static final String TABLE_NAME2="LOGROS";
+    private static final String TABLE_NAME3="ENTRADAS";
 
     public ManejadordeBasedeDatos(Context context){
         super(context,DATABASE_NAME,null,1);
@@ -44,6 +47,7 @@ public class ManejadordeBasedeDatos extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("INSERT INTO "+TABLE_NAME+" ("+COLUMN_PREGUNTA+", "+COLUMN_RESPUESTA_CORRECTA+", "+COLUMN_RESPUESTA_INCORRECTA1+", "+COLUMN_RESPUESTA_INCORRECTA2+")"+" VALUES ("+"'¿Que libro es el 2º libro mas vendido de la historia solo por debajo de la Biblia?'"+", "+"'One Piece'"+", "+"'Codigo Da Vinci'"+", "+"'Nande Koko ni Sensei ga'"+")");
         sqLiteDatabase.execSQL("INSERT INTO "+TABLE_NAME+" ("+COLUMN_PREGUNTA+", "+COLUMN_RESPUESTA_CORRECTA+", "+COLUMN_RESPUESTA_INCORRECTA1+", "+COLUMN_RESPUESTA_INCORRECTA2+")"+" VALUES ("+"'¿En que año salió la pelicula Titanic?'"+", "+"'1997'"+", "+"'1999'"+", "+"'1993'"+")");
         sqLiteDatabase.execSQL("CREATE TABLE "+TABLE_NAME2+" ("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"+COLUMN_HORA_FECHA+" DATE,"+COLUMN_PUNTUACION+" INTEGER"+")");
+        sqLiteDatabase.execSQL("CREATE TABLE "+TABLE_NAME3+" ("+COLUMN_HORA_FECHA+" DATE,"+COLUMN_BATERIA+" INTEGER,"+COLUMN_GPS+" STRING"+")");
 
     }
     public boolean Insertar(String pregunta,String correcta,String incorrecta1,String incorrecta2){
@@ -75,6 +79,23 @@ public class ManejadordeBasedeDatos extends SQLiteOpenHelper {
         int borrados=sqLiteDatabase.delete(TABLE_NAME,COLUMN_ID+"=?",new String[]{id});
         sqLiteDatabase.close();
         return (borrados>0);
+    }
+    public boolean Borrar2(){
+        SQLiteDatabase sqLiteDatabase=this.getWritableDatabase();
+        int borrados=sqLiteDatabase.delete(TABLE_NAME2,null,null);
+        sqLiteDatabase.close();
+        return (borrados>0);
+    }
+    public boolean Borrar3(){
+        SQLiteDatabase sqLiteDatabase=this.getWritableDatabase();
+        int borrados=sqLiteDatabase.delete(TABLE_NAME3,null,null);
+        sqLiteDatabase.close();
+        return (borrados>0);
+    }
+    public Cursor listarLogros(){
+        SQLiteDatabase sqLiteDatabase=this.getReadableDatabase();
+        Cursor cursor=sqLiteDatabase.rawQuery("SELECT * FROM "+TABLE_NAME2,null);
+        return  cursor;
     }
     public Cursor listar(){
         SQLiteDatabase sqLiteDatabase=this.getReadableDatabase();
