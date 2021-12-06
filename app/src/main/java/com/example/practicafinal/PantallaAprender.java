@@ -144,6 +144,14 @@ public class PantallaAprender extends AppCompatActivity {
                             }
                         });
                         builder.show();
+                        preguntas[0]=0;
+                        preguntas[1]=0;
+                        preguntas[2]=0;
+                        preguntas[3]=0;
+                        preguntas[4]=0;
+                        pregunta=0;
+                        Clickado=true;
+                        acertadas=0;
                     }
                 }
                 else{
@@ -221,7 +229,7 @@ public class PantallaAprender extends AppCompatActivity {
         builder.setStyle(bigPictureStyle);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(idChannel, nombreCanal, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel notificationChannel = new NotificationChannel(idChannel, nombreCanal, NotificationManager.IMPORTANCE_HIGH);
 
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.GREEN);

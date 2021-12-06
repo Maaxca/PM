@@ -101,8 +101,14 @@ public class PantallaPreguntas extends AppCompatActivity {
         btnBorrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean borrado=manejadordeBasedeDatos.Borrar(txtID.getText().toString());
-                Toast.makeText(PantallaPreguntas.this,borrado?"Borrado hecho correctamente":"No se ha borrado",Toast.LENGTH_SHORT).show();
+                Cursor cursor=manejadordeBasedeDatos.listar();
+                if(cursor.getCount()>5) {
+                    boolean borrado = manejadordeBasedeDatos.Borrar(txtID.getText().toString());
+                    Toast.makeText(PantallaPreguntas.this, borrado ? "Borrado hecho correctamente" : "No se ha borrado", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    Toast.makeText(PantallaPreguntas.this, "No puedes eliminar ninguna pregunta ya que necesias minimo 5 preguntas", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {

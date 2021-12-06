@@ -10,10 +10,11 @@ import android.os.Build;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
-import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class ManejadordeBasedeDatos extends SQLiteOpenHelper {
     private static final String DATABASE_NAME="preguntas.db";
@@ -66,8 +67,8 @@ public class ManejadordeBasedeDatos extends SQLiteOpenHelper {
     public boolean InsertarLogros(int puntuacion){
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues contentValues= new ContentValues();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        contentValues.put(COLUMN_HORA_FECHA, String.valueOf(dtf.format(LocalDateTime.now())));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        contentValues.put(COLUMN_HORA_FECHA, String.valueOf(sdf.format(new Date())));
         contentValues.put(COLUMN_PUNTUACION, puntuacion);
 
         long resultado=db.insert(TABLE_NAME2,null,contentValues);
