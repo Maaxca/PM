@@ -14,6 +14,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,10 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String NOMBRE_FICHERO = "COSA";
     private static final String NOMBRE = "ALGO";
     private static final String ETIQUETA_FOTO = "BUENAS";
-    Boolean si=false;
+    Boolean si=false,entrar=false;
     Button buttonHacerFoto,buttonSeleccionar,buttonEntrar;
-ImageView imageView;
-EditText txtClave;
+    ImageView imageView;
+    EditText txtClave;
     private static final int VENGO_DE_CAMARA = 1;
     private static final int PEDI_PERMISO_ESCRITURA = 1;
     private static final int VENGO_DE_CAMARA_CON_CALIDAD = 2;
@@ -48,6 +50,10 @@ EditText txtClave;
     Uri imageUri;
     Button btnHacerFoto,btnHacerFotoCalidad;
     private File fichero;
+    private static final int PERMISO_GPS = 5;
+    private static final long TIEMPO_REFRESCO = 500;
+    LocationManager locationManager;
+    LocationListener locationListener;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -58,6 +64,19 @@ EditText txtClave;
                 hacerLaFotoConCalidad();
             } else {
                 Toast.makeText(this, "Sin permiso de escritura no hay foto de calidad", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (requestCode==PERMISO_GPS){
+            if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this, "No tienes permisos.", Toast.LENGTH_SHORT).show();
+                }else{
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIEMPO_REFRESCO, 0, locationListener);
+                }
+
+            }else{
+                Toast.makeText(this, "Debes darme persmisos para continuar", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -190,6 +209,7 @@ EditText txtClave;
             @Override
             public void onClick(View view) {
                     pedirPermisoParaFoto();
+                    entrar=true;
             }
         });
 
@@ -216,7 +236,12 @@ EditText txtClave;
                     SharedPreferences misDatos = getSharedPreferences(NOMBRE_FICHERO, MODE_PRIVATE);
                     SharedPreferences.Editor editor = misDatos.edit();
                     editor.putString(NOMBRE,txtClave.getText().toString());
-                    editor.putString(ETIQUETA_FOTO, fichero.getAbsolutePath());
+                    if(entrar==false){
+                        editor.putString(ETIQUETA_FOTO, misDatos.getString(ETIQUETA_FOTO,"-- sin guardar --"));
+                    }
+                    else{
+                        editor.putString(ETIQUETA_FOTO, fichero.getAbsolutePath());
+                    }
                     editor.apply();
                     Intent intent=new Intent(MainActivity.this,Pantalla2.class);
                     intent.putExtra("","");

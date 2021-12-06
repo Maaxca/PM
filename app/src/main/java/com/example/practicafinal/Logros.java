@@ -39,7 +39,7 @@ public class Logros extends AppCompatActivity {
             listView.setAdapter(arrayAdapter);
         }
         else{
-            Toast.makeText(Logros.this, "Error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Logros.this, "No hay ningun logro insertado", Toast.LENGTH_SHORT).show();
         }
     }
 }

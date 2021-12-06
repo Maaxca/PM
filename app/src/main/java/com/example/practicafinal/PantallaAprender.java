@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -164,9 +165,9 @@ public class PantallaAprender extends AppCompatActivity {
         lista2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position2, long id) {
+                    final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
                     if(Clickado) {
                         if (aleatorio == position2) {
-                            Toast.makeText(PantallaAprender.this, "Bien", Toast.LENGTH_SHORT).show();
                             ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<String>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item, list) {
                                 @NonNull
                                 @Override
@@ -181,8 +182,11 @@ public class PantallaAprender extends AppCompatActivity {
                             lista2.setAdapter(arrayAdapter1);
                             Clickado=false;
                             acertadas++;
+                            if(globalVariable.getAlgo().compareTo("ON")==0){
+                                MediaPlayer mediaPlayer=MediaPlayer.create(getApplicationContext(),R.raw.correcto);
+                                mediaPlayer.start();
+                            }
                         } else {
-                            Toast.makeText(PantallaAprender.this, "Mal", Toast.LENGTH_SHORT).show();
                             ArrayAdapter<String> arrayAdapter1 = new ArrayAdapter<String>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item, list) {
                                 @NonNull
                                 @Override
@@ -199,10 +203,10 @@ public class PantallaAprender extends AppCompatActivity {
                             };
                             lista2.setAdapter(arrayAdapter1);
                             Clickado=false;
-                        }
-                        final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
-                        if(globalVariable.getAlgo().compareTo("ON")==0){
-                            Toast.makeText(PantallaAprender.this, "Hola muy buenas tardes", Toast.LENGTH_SHORT).show();
+                            if(globalVariable.getAlgo().compareTo("ON")==0){
+                                MediaPlayer mediaPlayer=MediaPlayer.create(getApplicationContext(),R.raw.error);
+                                mediaPlayer.start();
+                            }
                         }
                     }
                     else {

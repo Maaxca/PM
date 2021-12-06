@@ -21,4 +21,6 @@
     <string name="Metros">Meters</string>
     <string name="Logros">Achievements</string>
     <string name="BorrarL">Delete Achievements</string>
+    <string name="ALARMA">ALARM</string>
+    <string name="minutos">Minutes:</string>
 </resources>

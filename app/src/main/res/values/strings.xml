@@ -20,4 +20,6 @@
     <string name="Metros">Metros Recorridos</string>
     <string name="Logros">Logros</string>
     <string name="BorrarL">Borrar Logros</string>
+    <string name="ALARMA">ALARMA</string>
+    <string name="minutos">Minutos:</string>
 </resources>
