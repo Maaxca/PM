@@ -12,6 +12,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -35,6 +36,8 @@ import java.util.List;
 
 public class PantallaAprender extends AppCompatActivity {
     private static final String ID_CANAL = "El nombre de mi canal";
+    private static final String NOMBRE2 = "COSA2";
+    private static final String ALGO = "NOMBRE";
     Button btnSiguiente;
     ListView lista2;
     TextView txtTitulo;
@@ -133,6 +136,10 @@ public class PantallaAprender extends AppCompatActivity {
                         }
                     }else {
                         lanzarNotificacionConFoto();
+                        SharedPreferences misDatos = getSharedPreferences(NOMBRE2, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = misDatos.edit();
+                        editor.putString(ALGO,Integer.toString(acertadas));
+                        editor.apply();
                         manejadordeBasedeDatos.InsertarLogros(acertadas);
                         AlertDialog.Builder builder=new AlertDialog.Builder(PantallaAprender.this);
                         builder.setTitle("Gracias por jugar");

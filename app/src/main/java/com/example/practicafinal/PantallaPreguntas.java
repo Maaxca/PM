@@ -146,14 +146,14 @@ public class PantallaPreguntas extends AppCompatActivity {
         if (item.getTitle()=="Mostrar"){
             Cursor cursor=manejadordeBasedeDatos.listar2(Integer.toString(Posi+1));
             if(cursor!=null&&cursor.getCount()>0){
-                while(cursor.moveToNext()){
-                    AlertDialog.Builder builder=new AlertDialog.Builder(this);
+                while(cursor.moveToNext()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Datos de la Pregunta");
-                    builder.setMessage("ID: "+cursor.getString(0)+
-                    "\n Pregunta: "+cursor.getString(1)+
-                    "\n Respuesta Correcta: "+cursor.getString(2)+
-                    "\n Respuesta Incorrecta1: "+cursor.getString(3)+
-                    "\n Respuesta Incorrecta2: "+cursor.getString(4));
+                    builder.setMessage("ID: " + cursor.getString(0) +
+                            "\n Pregunta: " + cursor.getString(1) +
+                            "\n Respuesta Correcta: " + cursor.getString(2) +
+                            "\n Respuesta Incorrecta1: " + cursor.getString(3) +
+                            "\n Respuesta Incorrecta2: " + cursor.getString(4));
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {

@@ -4,24 +4,38 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -37,8 +51,12 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     private static final String NOMBRE_FICHERO = "COSA";
+    private static final String ID_CANAL2 = "El nombre de mi canal";
     private static final String NOMBRE = "ALGO";
     private static final String ETIQUETA_FOTO = "BUENAS";
+    private static final String NOMBRE2 = "COSA2";
+    private static final String ALGO = "NOMBRE";
+    private static final int CODIGO_RESPUESTA = 1;
     Boolean si=false,entrar=false;
     Button buttonHacerFoto,buttonSeleccionar,buttonEntrar;
     ImageView imageView;
@@ -104,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        MiServicioIntenso.encolarTrabajo(getApplicationContext(), new Intent());
         if (requestCode == VENGO_DE_CAMARA && resultCode == RESULT_OK) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             imageView.setImageBitmap(bitmap);
@@ -246,7 +264,10 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent=new Intent(MainActivity.this,Pantalla2.class);
                     intent.putExtra("","");
                     startActivityForResult(intent,0);
-
+                    SharedPreferences misDatos2 = getSharedPreferences(NOMBRE2, MODE_PRIVATE);
+                    if(misDatos2.getString(ALGO,"-- sin guardar --").compareTo("-- sin guardar --")!=0){
+                        lanzarNotificacion(misDatos2.getString(ALGO,"-- sin guardar --"));
+                    }
                 }
             }
         });
@@ -268,5 +289,42 @@ public class MainActivity extends AppCompatActivity {
     private void openGallery(){
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(Intent.createChooser(gallery, "Selecciona una galeria"),PICK_IMAGE);
+    }
+    private void lanzarNotificacion(String acertadas) {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, ID_CANAL2);
+
+        builder.setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle("Puntuacion del ultimo examen y metros recorridos")
+                .setAutoCancel(false).setContentText("Acertaste "+acertadas+" de 5");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String idChannel = "Canal 1";
+            String nombreCanal = "Mi canal favorito";
+            NotificationChannel notificationChannel = new NotificationChannel(idChannel, nombreCanal, NotificationManager.IMPORTANCE_DEFAULT);
+
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.GREEN);
+            notificationChannel.enableVibration(true);
+            notificationChannel.setShowBadge(true);
+            builder.setChannelId(idChannel);
+            notificationManager.createNotificationChannel(notificationChannel);
+
+        } else {
+
+            //Menor que oreo
+            builder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
+        }
+
+        //Acción tras pulsar la notificación
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(getApplicationContext());
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("IDENTIFICADOR", "Notificación simple"); //Le paso mensaje
+        taskStackBuilder.addNextIntent(intent);
+
+        PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(CODIGO_RESPUESTA, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
+
+        notificationManager.notify(1, builder.build());
     }
 }
