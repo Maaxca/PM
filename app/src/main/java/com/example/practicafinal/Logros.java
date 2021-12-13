@@ -21,7 +21,9 @@ public class Logros extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logros);
         listView=findViewById(R.id.listView);
+        txtMetros=findViewById(R.id.txtMetros);
         ManejadordeBasedeDatos manejadordeBasedeDatos=new ManejadordeBasedeDatos(this);
+        txtMetros.setText(getString(R.string.Metros)+": "+Double.toString(manejadordeBasedeDatos.listar3()));
         Cursor cursor=manejadordeBasedeDatos.listarLogros();
 
         ArrayAdapter<String> arrayAdapter;

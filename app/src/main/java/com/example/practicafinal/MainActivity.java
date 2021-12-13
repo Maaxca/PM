@@ -183,11 +183,11 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onLocationChanged(@NonNull Location location) {
                     latitud= String.valueOf(location.getLatitude());
-                    altitud=String.valueOf(location.getAltitude());
+                    altitud=String.valueOf(location.getLongitude());
                     SharedPreferences misDatos = getSharedPreferences(NOMBRE3, MODE_PRIVATE);
                     SharedPreferences.Editor editor = misDatos.edit();
                     editor.putString("LATITUD",latitud);
-                    editor.putString("ALTITUD",altitud);
+                    editor.putString("LONGITUD",altitud);
                     editor.apply();
                 }
             };
@@ -325,9 +325,10 @@ public class MainActivity extends AppCompatActivity {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, ID_CANAL2);
 
+        ManejadordeBasedeDatos manejadordeBasedeDatos = new ManejadordeBasedeDatos(getApplicationContext());
         builder.setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentTitle("Puntuacion del ultimo examen y metros recorridos")
-                .setAutoCancel(false).setContentText("Acertaste "+acertadas+" de 5");
+                .setAutoCancel(false).setContentText("Acertaste "+acertadas+" de 5"+" y recorriste "+Double.toString(manejadordeBasedeDatos.listar3())+" metros");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String idChannel = "Canal 1";

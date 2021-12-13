@@ -88,7 +88,7 @@ public class MiServicioIntenso extends JobIntentService {
 
                 ManejadordeBasedeDatos manejadordeBasedeDatos = new ManejadordeBasedeDatos(getApplicationContext());
                 SharedPreferences misDatos = getSharedPreferences(NOMBRE3, MODE_PRIVATE);
-                manejadordeBasedeDatos.InsertarEntradas(bateria,misDatos.getString("LATITUD","--sin guardar--"),misDatos.getString("ALTITUD","--sin guardar--"));
+                manejadordeBasedeDatos.InsertarEntradas(bateria,misDatos.getString("LATITUD","--sin guardar--"),misDatos.getString("LONGITUD","--sin guardar--"));
 
             }
         }

@@ -5,7 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.location.Location;
 import android.os.Build;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -26,8 +29,8 @@ public class ManejadordeBasedeDatos extends SQLiteOpenHelper {
     private static final String COLUMN_HORA_FECHA="HORA_FECHA";
     private static final String COLUMN_PUNTUACION="PUNTUACION";
     private static final String COLUMN_BATERIA="BATERIA";
-    private static final String COLUMN_GPS="Latitud";
-    private static final String COLUMN_GPS2="Altitud";
+    private static final String COLUMN_GPS="LATITUD";
+    private static final String COLUMN_GPS2="LONGITUD";
     private static final String TABLE_NAME="PREGUNTAS";
     private static final String TABLE_NAME2="LOGROS";
     private static final String TABLE_NAME3="ENTRADAS";
@@ -76,14 +79,14 @@ public class ManejadordeBasedeDatos extends SQLiteOpenHelper {
         db.close();
         return (resultado!=-1);
     }
-    public boolean InsertarEntradas(float bateria,String latitud,String altitud){
+    public boolean InsertarEntradas(float bateria,String latitud,String longitud){
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues contentValues= new ContentValues();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         contentValues.put(COLUMN_HORA_FECHA, String.valueOf(sdf.format(new Date())));
         contentValues.put(COLUMN_BATERIA, bateria);
         contentValues.put(COLUMN_GPS, latitud);
-        contentValues.put(COLUMN_GPS2, altitud);
+        contentValues.put(COLUMN_GPS2, longitud);
 
         long resultado=db.insert(TABLE_NAME3,null,contentValues);
         db.close();
@@ -121,6 +124,31 @@ public class ManejadordeBasedeDatos extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase=this.getReadableDatabase();
         Cursor cursor=sqLiteDatabase.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+COLUMN_ID+" = "+id,null);
         return  cursor;
+    }
+    public Double listar3(){
+        SQLiteDatabase sqLiteDatabase=this.getReadableDatabase();
+        Double lat=0.0,log=0.0,D=0.0;
+        Location location,location2;
+        location=new Location("Point A");
+        Cursor cursor=sqLiteDatabase.rawQuery("SELECT "+COLUMN_GPS+", "+COLUMN_GPS2+" FROM "+TABLE_NAME3,null);
+        if(cursor!=null&&cursor.getCount()>0){
+            while(cursor.moveToNext()){
+                lat=Double.parseDouble(cursor.getString(0));
+                log=Double.parseDouble(cursor.getString(1));
+                if(cursor.isFirst()){
+                    location.setLatitude(lat);
+                    location.setLongitude(log);
+                }
+                else{
+                    location2=new Location("Point B");
+                    location2.setLatitude(lat);
+                    location2.setLongitude(log);
+                    D+=location2.distanceTo(location);
+                    location=location2;
+                }
+            }
+        }
+        return D;
     }
     public boolean Modificar(String id,String pregunta,String correcta,String incorrecta1,String incorrecta2){
         SQLiteDatabase sqLiteDatabase=this.getWritableDatabase();
