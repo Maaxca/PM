@@ -49,7 +49,7 @@ public class ManejadordeBasedeDatos extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("INSERT INTO "+TABLE_NAME+" ("+COLUMN_PREGUNTA+", "+COLUMN_RESPUESTA_CORRECTA+", "+COLUMN_RESPUESTA_INCORRECTA1+", "+COLUMN_RESPUESTA_INCORRECTA2+")"+" VALUES ("+"'¿Que libro es el 2º libro mas vendido de la historia solo por debajo de la Biblia?'"+", "+"'One Piece'"+", "+"'Codigo Da Vinci'"+", "+"'Nande Koko ni Sensei ga'"+")");
         sqLiteDatabase.execSQL("INSERT INTO "+TABLE_NAME+" ("+COLUMN_PREGUNTA+", "+COLUMN_RESPUESTA_CORRECTA+", "+COLUMN_RESPUESTA_INCORRECTA1+", "+COLUMN_RESPUESTA_INCORRECTA2+")"+" VALUES ("+"'¿En que año salió la pelicula Titanic?'"+", "+"'1997'"+", "+"'1999'"+", "+"'1993'"+")");
         sqLiteDatabase.execSQL("CREATE TABLE "+TABLE_NAME2+" ("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"+COLUMN_HORA_FECHA+" DATE,"+COLUMN_PUNTUACION+" INTEGER"+")");
-        sqLiteDatabase.execSQL("CREATE TABLE "+TABLE_NAME3+" ("+COLUMN_HORA_FECHA+" DATE,"+COLUMN_BATERIA+" FLOAT,"+COLUMN_GPS+" STRING,"+COLUMN_GPS2+" STRING"+")");
+        sqLiteDatabase.execSQL("CREATE TABLE "+TABLE_NAME3+" ("+COLUMN_HORA_FECHA+" DATE,"+COLUMN_BATERIA+" FLOAT,"+COLUMN_GPS+" TEXT,"+COLUMN_GPS2+" TEXT"+")");
 
     }
     public boolean Insertar(String pregunta,String correcta,String incorrecta1,String incorrecta2){
@@ -81,7 +81,7 @@ public class ManejadordeBasedeDatos extends SQLiteOpenHelper {
         ContentValues contentValues= new ContentValues();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         contentValues.put(COLUMN_HORA_FECHA, String.valueOf(sdf.format(new Date())));
-        contentValues.put(COLUMN_PUNTUACION, bateria);
+        contentValues.put(COLUMN_BATERIA, bateria);
         contentValues.put(COLUMN_GPS, latitud);
         contentValues.put(COLUMN_GPS2, altitud);
 

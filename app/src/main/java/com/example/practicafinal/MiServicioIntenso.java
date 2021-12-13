@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -26,6 +27,7 @@ public class MiServicioIntenso extends JobIntentService {
     private static final int ID = 1 ;
     public static final String ID_CANAL = "mi canal favorito" ;
     private static final int ID_TRABAJO = 666;
+    private static final String NOMBRE3 = "ALGODON";
     LocationManager locationManager;
     LocationListener locationListener;
     String ETIQUETA = "SERVICIOINTENSO",latitud,altitud;
@@ -82,10 +84,11 @@ public class MiServicioIntenso extends JobIntentService {
                 int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
                 int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
-                float bateria = (level / (float)scale)*100;
+                float bateria = (level/(float)scale)*100;
 
                 ManejadordeBasedeDatos manejadordeBasedeDatos = new ManejadordeBasedeDatos(getApplicationContext());
-                manejadordeBasedeDatos.InsertarEntradas(bateria,latitud,altitud);
+                SharedPreferences misDatos = getSharedPreferences(NOMBRE3, MODE_PRIVATE);
+                manejadordeBasedeDatos.InsertarEntradas(bateria,misDatos.getString("LATITUD","--sin guardar--"),misDatos.getString("ALTITUD","--sin guardar--"));
 
             }
         }

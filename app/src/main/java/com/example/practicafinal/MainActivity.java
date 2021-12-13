@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String NOMBRE2 = "COSA2";
     private static final String ALGO = "NOMBRE";
     private static final int CODIGO_RESPUESTA = 1;
+    private static final String NOMBRE3 = "ALGODON";
     Boolean si=false,entrar=false;
     Button buttonHacerFoto,buttonSeleccionar,buttonEntrar;
     ImageView imageView;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private File fichero;
     private static final int PERMISO_GPS = 5;
     private static final long TIEMPO_REFRESCO = 500;
+    String altitud,latitud;
     LocationManager locationManager;
     LocationListener locationListener;
 
@@ -84,16 +86,16 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Sin permiso de escritura no hay foto de calidad", Toast.LENGTH_SHORT).show();
             }
         }
-        if (requestCode==PERMISO_GPS){
-            if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+        if (requestCode == PERMISO_GPS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "No tienes permisos.", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIEMPO_REFRESCO, 0, locationListener);
                 }
 
-            }else{
+            } else {
                 Toast.makeText(this, "Debes darme persmisos para continuar", Toast.LENGTH_SHORT).show();
             }
         }
@@ -122,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        MiServicioIntenso.encolarTrabajo(getApplicationContext(), new Intent());
         if (requestCode == VENGO_DE_CAMARA && resultCode == RESULT_OK) {
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             imageView.setImageBitmap(bitmap);
@@ -177,6 +178,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            locationListener = new LocationListener() {
+                @Override
+                public void onLocationChanged(@NonNull Location location) {
+                    latitud= String.valueOf(location.getLatitude());
+                    altitud=String.valueOf(location.getAltitude());
+                    SharedPreferences misDatos = getSharedPreferences(NOMBRE3, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = misDatos.edit();
+                    editor.putString("LATITUD",latitud);
+                    editor.putString("ALTITUD",altitud);
+                    editor.apply();
+                }
+            };
+            pedirPermisoGps();
+        MiServicioIntenso.encolarTrabajo(getApplicationContext(), new Intent());
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
         buttonHacerFoto=findViewById(R.id.buttonHacerFoto);
@@ -285,6 +301,21 @@ public class MainActivity extends AppCompatActivity {
             hacerLaFotoConCalidad();
         }
 
+    }
+    private void pedirPermisoGps(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISO_GPS);
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIEMPO_REFRESCO, 0, locationListener);
     }
     private void openGallery(){
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
