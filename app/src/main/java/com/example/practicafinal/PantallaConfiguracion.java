@@ -15,6 +15,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -26,11 +33,12 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class PantallaConfiguracion extends AppCompatActivity {
+public class PantallaConfiguracion extends AppCompatActivity implements SensorEventListener {
     private static final String ID_CANAL = "El nombre de mi canal";
     private static final int CODIGO_RESPUESTA = 1;
     private static final int CODIGO_ALARMA = 666;
     Switch switch1,switch2;
+    SensorManager sensorManager;
     Button btnLogros,btnBorrarLogros;
     FloatingActionButton btnCompartir;
     EditText txtMinutos;
@@ -38,6 +46,8 @@ public class PantallaConfiguracion extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_configuracion);
+        sensorManager=(SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManager.registerListener((SensorEventListener) this,sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY),SensorManager.SENSOR_DELAY_NORMAL);
         switch1=findViewById(R.id.switch1);
         switch2=findViewById(R.id.switch2);
         btnLogros=findViewById(R.id.btnLogros);
@@ -57,12 +67,10 @@ public class PantallaConfiguracion extends AppCompatActivity {
         if(globalVariable.getAlgo2().compareTo("ON")==0){
             switch2.setChecked(true);
             switch2.setText("ON");
-            txtMinutos.setEnabled(true);
         }
         else{
             switch2.setChecked(false);
             switch2.setText("OFF");
-            txtMinutos.setEnabled(false);
         }
         switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -82,28 +90,34 @@ public class PantallaConfiguracion extends AppCompatActivity {
         switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
-                    globalVariable.setAlgo2("ON");
-                    switch2.setText("ON");
-                    txtMinutos.setEnabled(true);
-                    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                    Intent intent = new Intent(getApplicationContext(), Alarma.class);
-
-                    PendingIntent pendingIntent =  PendingIntent.getBroadcast(getApplicationContext(), CODIGO_ALARMA,intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),Integer.parseInt(txtMinutos.getText().toString())+000*60, pendingIntent);
+                if (isChecked) {
+                    if (txtMinutos.getText().toString().isEmpty()==false) {
+                        try{
+                        final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
+                        globalVariable.setAlgo2("ON");
+                        switch2.setText("ON");
+                        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                        Intent intent = new Intent(getApplicationContext(), Alarma.class);
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), CODIGO_ALARMA, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), Integer.parseInt(txtMinutos.getText().toString()) + 000 * 60, pendingIntent);
+                    }catch (NumberFormatException e){
+                        Toast.makeText(PantallaConfiguracion.this, "Debes poner los minutos correctamente", Toast.LENGTH_SHORT).show();
+                    }
+                    } else {
+                        Toast.makeText(PantallaConfiguracion.this, "No puedes dejar el campo de los minutos vacio", Toast.LENGTH_SHORT).show();
+                        switch2.setChecked(false);
+                    }
+                    } else {
+                        final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
+                        globalVariable.setAlgo2("OFF");
+                        switch2.setText("OFF");
+                        stopService(new Intent(getBaseContext(), ServicioSonido.class));
+                        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                        Intent intent = new Intent(getApplicationContext(), Alarma.class);
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), CODIGO_ALARMA, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
+                    }
                 }
-                else{
-                    final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
-                    globalVariable.setAlgo2("OFF");
-                    switch2.setText("OFF");
-                    txtMinutos.setEnabled(false);
-                    AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                    Intent intent = new Intent(getApplicationContext(), Alarma.class);
-                    PendingIntent pendingIntent =  PendingIntent.getBroadcast(getApplicationContext(), CODIGO_ALARMA,intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    alarmManager.cancel(pendingIntent);
-                }
-            }
         });
         btnLogros.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,5 +206,26 @@ public class PantallaConfiguracion extends AppCompatActivity {
         builder.setContentIntent(pendingIntent);
 
         notificationManager.notify(1, builder.build());
+    }
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+
+        if(sensorEvent.sensor.getType()== Sensor.TYPE_PROXIMITY){
+            if(sensorEvent.values[0]==0){
+                final GlobalClass globalVariable = (GlobalClass) getApplicationContext();
+                globalVariable.setAlgo2("OFF");
+                switch2.setText("OFF");
+                stopService(new Intent(getBaseContext(), ServicioSonido.class));
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                Intent intent = new Intent(getApplicationContext(), Alarma.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), CODIGO_ALARMA, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                alarmManager.cancel(pendingIntent);
+                switch2.setChecked(false);
+            }
+        }
+    }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 }

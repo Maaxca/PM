@@ -4,7 +4,7 @@ import android.app.Application;
 
 public class GlobalClass extends Application {
     String algo="ON";
-    String algo2="ON";
+    String algo2="OFF";
 
     public String getAlgo2() {
         return algo2;

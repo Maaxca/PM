@@ -190,6 +190,20 @@ public class MainActivity extends AppCompatActivity {
                     editor.putString("LONGITUD",altitud);
                     editor.apply();
                 }
+                @Override
+                public void onProviderEnabled(@NonNull String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(@NonNull String provider) {
+
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
             };
             pedirPermisoGps();
         MiServicioIntenso.encolarTrabajo(getApplicationContext(), new Intent());
